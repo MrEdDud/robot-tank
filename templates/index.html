@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+    button { width: 60px; height: 60px; font-size: 24px; margin: 5px; background-color: #081c15; color: #dad7cd;} 
+    html {font-family: 'Inter', sans-serif; background-color: #081c15; color: #dad7cd; padding:20px;}
+    </style>
+</head>
+<body>
+    <h1 style="font-size:64px; text-align: center;">Tank Control Panel</h1>
+    <div>
+        <h1 style="font-size: 48px;">Tank movement:</h1>
+        <button id="up">↑</button>
+        <button id="left">←</button>
+        <button id="down">↓</button>
+        <button id="right">→</button>
+    </div>
+    <div>
+        <h1 style="font-size: 48px;">Output sound:</h1>
+        <input id="soundUrl" type="text" placeholder="Enter URL" size="50" style="font-size: 24px">
+        <button style="width:10%" id="playSound">Play Sound</button>
+    </div>
+    <script>
+        const apiUrl = 'http://127.0.0.1:5000/api';  // sets the base URL for API requests
+
+        function sendMove(direction) {  // defines a function to send movement commands
+            fetch(apiUrl + '/move', {  // sends a POST request to /move url
+                method: 'POST',  // sets HTTP method to POST
+                headers: {'Content-Type': 'application/json'},  // tells the server the request body is JSON
+                body: JSON.stringify({direction})  // sends the direction as JSON in the body
+            });
+        }
+
+        function sendSound(url) {  // defines a function to send a sound URL
+            fetch(apiUrl + '/play', {  // sends a POST request to /play
+                method: 'POST',  // sets HTTP method to POST
+                headers: {'Content-Type': 'application/json'},  // tells the server the request body is JSON
+                body: JSON.stringify({url})  // sends the URL as JSON in the body
+            });
+        }
+
+        document.getElementById('up').onclick = () => sendMove('up');  // binds the "up" button to send the "up" command
+        document.getElementById('down').onclick = () => sendMove('down');  // binds the "down" button
+        document.getElementById('left').onclick = () => sendMove('left');  // binds the "left" button
+        document.getElementById('right').onclick = () => sendMove('right');  // binds the "right" button
+
+        document.getElementById('playSound').onclick = () => {  // binds the "playSound" button
+            const url = document.getElementById('soundUrl').value;  // gets the value from the sound input field
+            if(url) sendSound(url);  // if URL exists, send it to the backend
+        };
+
+        window.addEventListener('keydown', (e) => {  // listens for keydown events on the page
+            switch(e.key.toLowerCase()) {  // converts pressed key to lowercase and handles it
+                case 'arrowup':
+                case 'w': sendMove('up'); break;  // handles up arrow and 'w'
+                case 'arrowdown':
+                case 's': sendMove('down'); break;  // handles down arrow and 's'
+                case 'arrowleft':
+                case 'a': sendMove('left'); break;  // handles left arrow and 'a'
+                case 'arrowright':
+                case 'd': sendMove('right'); break;  // handles right arrow and 'd'
+            }
+        });
+    </script>
+</body>
+</html>
