@@ -1,9 +1,7 @@
-from flask import Flask, render_template, request  # imports Flask and tools for HTML rendering and handling requests
+from flask import Flask, render_template, request, jsonify  # imports Flask and tools for HTML rendering and handling requests
 from flask_sqlalchemy import SQLAlchemy  # imports SQLAlchemy for database integration
 from flask_restful import Api  # imports Flask-RESTful tools
 import requests, subprocess  # imports requests to make HTTP calls and subprocess to run shell commands
-
-# THIS IS UPDATED WOOHOO
 
 # This Flask API was created with the help of the following video:
 # https://www.youtube.com/watch?v=z3YMz-Gocmw&t=128s
@@ -44,17 +42,17 @@ def play_audio():  # function to play audio locally using mpv
     data = request.get_json()  # gets JSON data from the request
     url = data.get("url")  # extracts the "url" from the data
     if not url:  # checks if the URL is missing
-        return {"error": "No URL provided"}, 400  # returns error if URL was not provided
+        return jsonify({"error": "No URL provided"}), 400  # returns error if URL was not provided
 
     try:
-        subprocess.Popen(['mpv', '--no-video', '--ytdl-format=bestaudio', url])  # launches mpv in background to play audio without video
-        return {"message": "Playing audio"}, 200  # returns success message
+        subprocess.Popen(['/usr/bin/mpv', '--no-video', '--ytdl-format=bestaudio', url])  # launches mpv in background to play audio without video
+        return jsonify({"message": "Playing audio"}), 200  # returns success message
     except Exception as e:  # handles exceptions
-        return {"error": str(e)}, 500  # returns error message with 500 status code
+        return jsonify({"error": str(e)}), 500  # returns error message with 500 status code
 
 @app.route("/")  # defines the root route
 def home():  # function to render the home page
     return render_template("index.html")  # renders the index.html template
 
 if __name__ == "__main__":  # checks if the script is being run directly
-    app.run(debug=True)  # starts the Flask development server with debug mode enabled
+    app.run(host = "0.0.0.0", debug=True)  # starts the Flask development server with debug mode enabled
