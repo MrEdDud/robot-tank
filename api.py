@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, jsonify  # imports Flask and tools for HTML rendering and handling requests
+from flask import Flask, render_template, request, jsonify, abort  # imports Flask and tools for HTML rendering and handling requests
 from flask_sqlalchemy import SQLAlchemy  # imports SQLAlchemy for database integration
 from flask_restful import Api  # imports Flask-RESTful tools
-import requests, subprocess  # imports requests to make HTTP calls and subprocess to run shell commands
+import requests, subprocess, os  # imports requests to make HTTP calls and subprocess to run shell commands
 
 # This Flask API was created with the help of the following video:
 # https://www.youtube.com/watch?v=z3YMz-Gocmw&t=128s
@@ -12,6 +12,12 @@ db = SQLAlchemy(app)  # initializes the database object with the app
 api = Api(app)  # initializes the RESTful API with the app
 
 PI_IP = "http://192.168.0.108:5001"  # stores the Raspberry Pi's local IP address and port
+ALLOWED_IP = os.getenv("ALLOWED_IP")
+
+@app.before_request
+def limit_remote_addr():
+    if request.remote_addr != ALLOWED_IP:
+        abort(403)
 
 @app.route("/api/move", methods=["POST"])  # defines a POST endpoint at /api/move
 def move():  # function to handle movement commands
@@ -25,18 +31,6 @@ def move():  # function to handle movement commands
             return {"error": str(e)}, 500  # returns error message with 500 status code
     return {"error": "No direction provided"}, 400  # returns error if direction was missing
 
-@app.route("/api/play", methods=["POST"])  # defines a POST endpoint at /api/play
-def play():  # function to send a play URL to the Pi
-    data = request.get_json()  # gets JSON data from the request
-    url = data.get("url")  # extracts the "url" from the data
-    if url:  # checks if a URL was provided
-        try:
-            response = requests.post(f"{PI_IP}/play", json={"url": url})  # sends a POST request to the Pi with the URL
-            return {"status": "sent", "pi_response": response.json()}  # returns success response with Pi's response
-        except Exception as e:  # handles exceptions
-            return {"error": str(e)}, 500  # returns error message with 500 status code
-    return {"error": "No URL provided"}, 400  # returns error if URL was missing
-
 @app.route("/api/play", methods=["POST"])  # defines another POST endpoint at the same path (this will override the above one)
 def play_audio():  # function to play audio locally using mpv
     data = request.get_json()  # gets JSON data from the request
@@ -45,7 +39,7 @@ def play_audio():  # function to play audio locally using mpv
         return jsonify({"error": "No URL provided"}), 400  # returns error if URL was not provided
 
     try:
-        subprocess.Popen(['/usr/bin/mpv', '--no-video', '--ytdl-format=bestaudio', url])  # launches mpv in background to play audio without video
+        subprocess.Popen(['mpv', '--no-video', '--ytdl-format=bestaudio', url])  # launches mpv in background to play audio without video
         return jsonify({"message": "Playing audio"}), 200  # returns success message
     except Exception as e:  # handles exceptions
         return jsonify({"error": str(e)}), 500  # returns error message with 500 status code
