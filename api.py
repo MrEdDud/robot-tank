@@ -10,7 +10,7 @@ app = Flask(__name__)  # creates the Flask application instance
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"  # sets the database URI to use a local SQLite file
 db = SQLAlchemy(app)  # initializes the database object with the app
 api = Api(app)  # initializes the RESTful API with the app
-player+process = None  # initializes a variable to manage the audio player process
+player_process = None  # initializes a variable to manage the audio player process
 
 PI_IP = "http://192.168.0.108:5001"  # stores the Raspberry Pi's local IP address and port
 ALLOWED_IP = os.getenv("ALLOWED_IP")
