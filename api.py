@@ -33,16 +33,32 @@ def move():  # function to handle movement commands
 
 @app.route("/api/play", methods=["POST"])  # defines another POST endpoint at the same path (this will override the above one)
 def play_audio():  # function to play audio locally using mpv
+    global player_process  # declares player_process as a global variable to manage the audio player process
     data = request.get_json()  # gets JSON data from the request
     url = data.get("url")  # extracts the "url" from the data
+
+    volume = data.get("volume", 100)  # gets the volume from the data, defaulting to 100 if not provided
+
     if not url:  # checks if the URL is missing
         return jsonify({"error": "No URL provided"}), 400  # returns error if URL was not provided
 
     try:
-        subprocess.Popen(['mpv', '--no-video', '--ytdl-format=bestaudio', url])  # launches mpv in background to play audio without video
-        return jsonify({"message": "Playing audio"}), 200  # returns success message
+        if player_process and player_process.poll() is None:  # checks if the player process is already running
+            player_process.terminate()  # terminates the existing player process if it is running
+
+        player_process = subprocess.Popen(['mpv', '--no-video', '--ytdl-format=bestaudio', url, f'--volume={volume}'])  # launches mpv in background to play audio without video
+        return jsonify({"message": "Playing audio at volume {volume}"}), 200  # returns success message
     except Exception as e:  # handles exceptions
         return jsonify({"error": str(e)}), 500  # returns error message with 500 status code
+
+@app.route("/api/stop", methods=["POST"])
+def stop_audio():
+    global player_process
+    if player_process and player_process.poll() is None:
+        player_process.terminate()
+        return jsonify({"message": "Audio stopped"}), 200
+    else:
+        return jsonify({"message": "No audio playing"}), 200
 
 @app.route("/")  # defines the root route
 def home():  # function to render the home page
