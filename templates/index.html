@@ -24,9 +24,6 @@
         <input id="soundUrl" type="text" placeholder="Enter URL" size="50" style="font-size: 24px">
         <button style="width:10%" id="playSound">Play Sound</button>
         <button style="width:10%" id="stopSound">Stop</button>
-        <br><br>
-        <label for="volumeRange">Volume:</label>
-        <input type="range" id="volumeRange" min="0" max="100" value="50" style="width: 300px;">
     </div>
     <script>
         const apiUrl = 'http://192.168.0.108:5000/api';  // sets the base URL for API requests
@@ -58,8 +55,7 @@
 
         document.getElementById('playSound').onclick = () => {  // binds the "playSound" button
             const url = document.getElementById('soundUrl').value;  // gets the value from the sound input field
-            const volume = parseInt(document.getElementById('volumeRange').value);  // gets the volume from the range input
-            if(url) sendSound(url, volume);  // if URL exists, send it to the backend
+            if(url) sendSound(url);  // if URL exists, send it to the backend
         };
 
         document.getElementById('stopSound').onclick = () => stopSound();  // binds the "stopSound" button to stop the audio

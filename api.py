@@ -3,9 +3,6 @@ from flask_sqlalchemy import SQLAlchemy  # imports SQLAlchemy for database integ
 from flask_restful import Api  # imports Flask-RESTful tools
 import requests, subprocess, os  # imports requests to make HTTP calls and subprocess to run shell commands
 
-# This Flask API was created with the help of the following video:
-# https://www.youtube.com/watch?v=z3YMz-Gocmw&t=128s
-
 app = Flask(__name__)  # creates the Flask application instance
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"  # sets the database URI to use a local SQLite file
 db = SQLAlchemy(app)  # initializes the database object with the app
@@ -38,8 +35,6 @@ def play_audio():  # function to play audio locally using mpv
     data = request.get_json()  # gets JSON data from the request
     url = data.get("url")  # extracts the "url" from the data
 
-    volume = data.get("volume", 100)  # gets the volume from the data, defaulting to 100 if not provided
-
     if not url:  # checks if the URL is missing
         return jsonify({"error": "No URL provided"}), 400  # returns error if URL was not provided
 
@@ -47,7 +42,7 @@ def play_audio():  # function to play audio locally using mpv
         if player_process and player_process.poll() is None:  # checks if the player process is already running
             player_process.terminate()  # terminates the existing player process if it is running
 
-        player_process = subprocess.Popen(['mpv', '--no-video', '--ytdl-format=bestaudio', url, f'--volume={volume}'])  # launches mpv in background to play audio without video
+        player_process = subprocess.Popen(['mpv', '--no-video', '--ytdl-format=bestaudio', url])  # launches mpv in background to play audio without video
         return jsonify({"message": "Playing audio at volume {volume}"}), 200  # returns success message
     except Exception as e:  # handles exceptions
         return jsonify({"error": str(e)}), 500  # returns error message with 500 status code
