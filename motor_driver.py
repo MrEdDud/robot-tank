@@ -1,86 +1,40 @@
 from gpiozero import PWMOutputDevice, DigitalOutputDevice
-from time import sleep
 
-# Motor A pins (left)
-AIN1 = DigitalOutputDevice(16)
-AIN2 = DigitalOutputDevice(18)
-PWMA = PWMOutputDevice(12)
+# Pins as BCM numbers (physical pin -> BCM)
+PWMA = PWMOutputDevice(18)     # physical pin 12, PWM pin for speed
+AIN1 = DigitalOutputDevice(23) # physical pin 16, direction control 1
+AIN2 = DigitalOutputDevice(24) # physical pin 18, direction control 2
+STBY = DigitalOutputDevice(25) # physical pin 22, standby pin
 
-# Motor B pins (right)
-BIN1 = DigitalOutputDevice(15)
-BIN2 = DigitalOutputDevice(13)
-PWMB = PWMOutputDevice(11)
+def enable_motor():
+    STBY.on()
 
-# Standby pin
-STBY = DigitalOutputDevice(22)
+def disable_motor():
+    STBY.off()
 
-# Enable motors (set STBY high)
-STBY.on()
+def forward(speed=1.0):
+    enable_motor()
+    AIN1.on()
+    AIN2.off()
+    PWMA.value = speed  # 0.0 to 1.0 for PWM speed control
 
-def run_motor(motor, speed, direction):
-    if direction == 0:
-        in1_state = True
-        in2_state = False
-    else:
-        in1_state = False
-        in2_state = True
+def reverse(speed=1.0):
+    enable_motor()
+    AIN1.off()
+    AIN2.on()
+    PWMA.value = speed
 
-    if motor == 0:
-        AIN1.value = in1_state
-        AIN2.value = in2_state
-        PWMA.value = speed / 100  # gpiozero expects a float between 0.0 and 1.0
-    elif motor == 1:
-        BIN1.value = in1_state
-        BIN2.value = in2_state
-        PWMB.value = speed / 100
+def turn_left(speed=1.0):
+    # If you have a second motor, you would control it here.
+    # For single motor demo, just reverse as a placeholder
+    reverse(speed)
 
-def forward(spd):
-    run_motor(0, spd, 0)
-    run_motor(1, spd, 0)
-
-def reverse(spd):
-    run_motor(0, spd, 1)
-    run_motor(1, spd, 1)
-
-def turn_left(spd):
-    run_motor(0, spd, 0)
-    run_motor(1, spd, 1)
-
-def turn_right(spd):
-    run_motor(0, spd, 1)
-    run_motor(1, spd, 0)
+def turn_right(speed=1.0):
+    # For single motor demo, just forward as placeholder
+    forward(speed)
 
 def motor_stop():
     PWMA.value = 0
-    PWMB.value = 0
     AIN1.off()
     AIN2.off()
-    BIN1.off()
-    BIN2.off()
-    STBY.off()
-
-# Main test loop
-def main(args=None):
-    try: 
-        while True:
-            forward(50)
-            sleep(2)
-            motor_stop()
-            sleep(0.25)
-
-            reverse(50)
-            sleep(2)
-            motor_stop()
-            sleep(0.25)
-
-            turn_left(50)
-            sleep(2)
-            motor_stop()
-            sleep(0.25)
-
-            turn_right(50)
-            sleep(2)
-            motor_stop()
-            sleep(2)
-    except KeyboardInterrupt:
-        motor_stop()  # Ensure motors are stopped on exit
+    disable_motor()
