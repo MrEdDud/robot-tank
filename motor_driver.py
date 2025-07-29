@@ -61,23 +61,26 @@ def motor_stop():
 
 # Main test loop
 def main(args=None):
-    while True:
-        forward(50)
-        sleep(2)
-        motor_stop()
-        sleep(0.25)
+    try: 
+        while True:
+            forward(50)
+            sleep(2)
+            motor_stop()
+            sleep(0.25)
 
-        reverse(50)
-        sleep(2)
-        motor_stop()
-        sleep(0.25)
+            reverse(50)
+            sleep(2)
+            motor_stop()
+            sleep(0.25)
 
-        turn_left(50)
-        sleep(2)
-        motor_stop()
-        sleep(0.25)
+            turn_left(50)
+            sleep(2)
+            motor_stop()
+            sleep(0.25)
 
-        turn_right(50)
-        sleep(2)
-        motor_stop()
-        sleep(2)
+            turn_right(50)
+            sleep(2)
+            motor_stop()
+            sleep(2)
+    except KeyboardInterrupt:
+        motor_stop()  # Ensure motors are stopped on exit
