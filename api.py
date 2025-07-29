@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, abort  # imports Flask and tools for HTML rendering and handling requests
 from flask_sqlalchemy import SQLAlchemy  # imports SQLAlchemy for database integration
 from flask_restful import Api  # imports Flask-RESTful tools
+from motor_driver import forward, reverse, turn_left, turn_right, motor_stop  # imports motor control functions from motor_driver module
 import requests, subprocess, os  # imports requests to make HTTP calls and subprocess to run shell commands
 
 app = Flask(__name__)  # creates the Flask application instance
@@ -21,13 +22,24 @@ def limit_remote_addr():
 def move():  # function to handle movement commands
     data = request.get_json()  # gets JSON data from the POST request
     direction = data.get("direction")  # extracts the "direction" value from the JSON
-    if direction:  # checks if a direction was provided
-        try:
-            response = requests.post(f"{PI_IP}/move", json={"direction": direction})  # sends a POST request to the Pi with the direction
-            return {"status": "sent", "pi_response": response.json()}  # returns success response with Pi's response
-        except Exception as e:  # handles exceptions
-            return {"error": str(e)}, 500  # returns error message with 500 status code
-    return {"error": "No direction provided"}, 400  # returns error if direction was missing
+    if not direction:
+        return {"error": "No direction provided"}, 400
+
+    try:
+        if direction == "up":
+            forward()
+        elif direction == "down":
+            reverse()
+        elif direction == "left":
+            turn_left()
+        elif direction == "right":
+            turn_right()
+        else:
+            motor_stop()
+
+        return {"status": "executed", "direction": direction}
+    except Exception as e:
+        return {"error": str(e)}, 500
 
 @app.route("/api/play", methods=["POST"])  # defines another POST endpoint at the same path (this will override the above one)
 def play_audio():  # function to play audio locally using mpv
