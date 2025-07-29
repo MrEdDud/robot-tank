@@ -1,84 +1,83 @@
-from time import sleep      # Import sleep from time
-import RPi.GPIO as GPIO     # Import Standard GPIO Module
+from gpiozero import PWMOutputDevice, DigitalOutputDevice
+from time import sleep
 
-GPIO.setmode(GPIO.BOARD)      # Set GPIO mode to BCM
-GPIO.setwarnings(False)
+# Motor A pins (left)
+AIN1 = DigitalOutputDevice(16)
+AIN2 = DigitalOutputDevice(18)
+PWMA = PWMOutputDevice(12)
 
-# PWM Frequency
-PWM_FREQ = 100
+# Motor B pins (right)
+BIN1 = DigitalOutputDevice(15)
+BIN2 = DigitalOutputDevice(13)
+PWMB = PWMOutputDevice(11)
 
-# Setup Pins for motor controller
-GPIO.setup(12, GPIO.OUT)    # PWMA
-GPIO.setup(18, GPIO.OUT)    # AIN2
-GPIO.setup(16, GPIO.OUT)    # AIN1
-GPIO.setup(22, GPIO.OUT)    # STBY
-GPIO.setup(15, GPIO.OUT)    # BIN1
-GPIO.setup(13, GPIO.OUT)    # BIN2
-GPIO.setup(11, GPIO.OUT)    # PWMB
+# Standby pin
+STBY = DigitalOutputDevice(22)
 
-pwma = GPIO.PWM(12, PWM_FREQ)    # pin 18 to PWM  
-pwmb = GPIO.PWM(11, PWM_FREQ)    # pin 13 to PWM
-pwma.start(100)
-pwmb.start(100)
+# Enable motors (set STBY high)
+STBY.on()
 
-# Functions
+def run_motor(motor, speed, direction):
+    if direction == 0:
+        in1_state = True
+        in2_state = False
+    else:
+        in1_state = False
+        in2_state = True
+
+    if motor == 0:
+        AIN1.value = in1_state
+        AIN2.value = in2_state
+        PWMA.value = speed / 100  # gpiozero expects a float between 0.0 and 1.0
+    elif motor == 1:
+        BIN1.value = in1_state
+        BIN2.value = in2_state
+        PWMB.value = speed / 100
+
 def forward(spd):
-    runMotor(0, spd, 0)
-    runMotor(1, spd, 0)
+    run_motor(0, spd, 0)
+    run_motor(1, spd, 0)
 
 def reverse(spd):
-    runMotor(0, spd, 1)
-    runMotor(1, spd, 1)
+    run_motor(0, spd, 1)
+    run_motor(1, spd, 1)
 
 def turn_left(spd):
-    runMotor(0, spd, 0)
-    runMotor(1, spd, 1)
+    run_motor(0, spd, 0)
+    run_motor(1, spd, 1)
 
 def turn_right(spd):
-    runMotor(0, spd, 1)
-    runMotor(1, spd, 0)
-
-def runMotor(motor, spd, direction):
-    GPIO.output(22, GPIO.HIGH)
-    in1 = GPIO.HIGH
-    in2 = GPIO.LOW
-
-    if(direction == 1):
-        in1 = GPIO.LOW
-        in2 = GPIO.HIGH
-
-    if(motor == 0):
-        GPIO.output(16, in1)
-        GPIO.output(18, in2)
-        pwma.ChangeDutyCycle(spd)
-    elif(motor == 1):
-        GPIO.output(15, in1)
-        GPIO.output(13, in2)
-        pwmb.ChangeDutyCycle(spd)
-
+    run_motor(0, spd, 1)
+    run_motor(1, spd, 0)
 
 def motor_stop():
-    GPIO.output(22, GPIO.LOW)
+    PWMA.value = 0
+    PWMB.value = 0
+    AIN1.off()
+    AIN2.off()
+    BIN1.off()
+    BIN2.off()
+    STBY.off()
 
-# Main
+# Main test loop
 def main(args=None):
     while True:
-        forward(50)     # run motor forward
-        sleep(2)        # ... for 2 seconds
-        motor_stop()     # ... stop motor
-        sleep(.25)      # delay between motor runs
+        forward(50)
+        sleep(2)
+        motor_stop()
+        sleep(0.25)
 
-        reverse(50)     # run motor in reverse
-        sleep(2)        # ... for 2 seoconds
-        motor_stop()     # ... stop motor
-        sleep(.25)      # delay between motor runs
+        reverse(50)
+        sleep(2)
+        motor_stop()
+        sleep(0.25)
 
-        turn_left(50)    # turn Left
-        sleep(2)        # ... for 2 seconds
-        motor_stop()     # ... stop motors
-        sleep(.25)      # delay between motor runs
+        turn_left(50)
+        sleep(2)
+        motor_stop()
+        sleep(0.25)
 
-        turn_right(50)   # turn Right
-        sleep(2)        # ... for 2 seconds
-        motor_stop()     # ... stop motors
-        sleep(2)        # delay between motor runs
+        turn_right(50)
+        sleep(2)
+        motor_stop()
+        sleep(2)
