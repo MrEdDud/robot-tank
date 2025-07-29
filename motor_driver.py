@@ -1,4 +1,5 @@
 from gpiozero import PWMOutputDevice, DigitalOutputDevice
+import atexit  # for cleanup on exit
 
 # Pins as BCM numbers (physical pin -> BCM)
 PWMA = PWMOutputDevice(18)     # physical pin 12, PWM pin for speed
@@ -38,3 +39,10 @@ def motor_stop():
     AIN1.off()
     AIN2.off()
     disable_motor()
+
+# Cleanup function to stop the motor when program exits
+def cleanup():
+    motor_stop()
+
+# Register cleanup to run on program exit
+atexit.register(cleanup)
