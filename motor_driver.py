@@ -1,48 +1,60 @@
-from gpiozero import PWMOutputDevice, DigitalOutputDevice
-import atexit  # for cleanup on exit
+from gpiozero import Motor, PWMOutputDevice, DigitalOutputDevice
+import curses
 
-# Pins as BCM numbers (physical pin -> BCM)
-PWMA = PWMOutputDevice(18)     # physical pin 12, PWM pin for speed
-AIN1 = DigitalOutputDevice(23) # physical pin 16, direction control 1
-AIN2 = DigitalOutputDevice(24) # physical pin 18, direction control 2
-STBY = DigitalOutputDevice(25) # physical pin 22, standby pin
+STBY = DigitalOutputDevice(22)
+STBY.on()
 
-def enable_motor():
-    STBY.on()
+class Vehicle:
+    def __init__(self):
+        self.left_motor = Motor(forward=16, backward=18)
+        self.left_pwm = PWMOutputDevice(18)
+        self.left_pwm.value = 0
 
-def disable_motor():
-    STBY.off()
+    def forward(self):
+        self.left_motor.forward()
+        self.left_pwm.value = 0.5
 
-def forward(speed=1.0):
-    enable_motor()
-    AIN1.on()
-    AIN2.off()
-    PWMA.value = speed  # 0.0 to 1.0 for PWM speed control
+    def backward(self):
+        self.left_motor.backward()
+        self.left_pwm.value = 0.5
 
-def reverse(speed=1.0):
-    enable_motor()
-    AIN1.off()
-    AIN2.on()
-    PWMA.value = speed
+    def stop(self):
+        self.left_motor.stop()
+        self.left_pwm.value = 0
 
-def turn_left(speed=1.0):
-    # If you have a second motor, you would control it here.
-    # For single motor demo, just reverse as a placeholder
-    reverse(speed)
+    def map_key_to_command(self, key):
+        map = {
+            curses.KEY_UP: self.forward,
+            curses.KEY_DOWN: self.backward
+        }
+        return map[key]
 
-def turn_right(speed=1.0):
-    # For single motor demo, just forward as placeholder
-    forward(speed)
+    def control(self, key):
+        return self.map_key_to_command(key)
 
-def motor_stop():
-    PWMA.value = 0
-    AIN1.off()
-    AIN2.off()
-    disable_motor()
+rpi_vehicle = Vehicle()
 
-# Cleanup function to stop the motor when program exits
-def cleanup():
-    motor_stop()
+def main(window):
+    next_key = None
 
-# Register cleanup to run on program exit
-atexit.register(cleanup)
+    while True:
+        curses.halfdelay(1)
+        if next_key is None:
+            key = window.getch()
+            print(key)
+        else:
+            key = next_key
+            next_key = None
+        if key != -1:
+            # KEY PRESSED
+            curses.halfdelay(1)
+            action = rpi_vehicle.control(key)
+            if action:
+                action()
+            next_key = key
+            while next_key == key:
+                next_key = window.getch()
+            # KEY RELEASED
+            rpi_vehicle.left_motor.stop()
+
+curses.wrapper(main)

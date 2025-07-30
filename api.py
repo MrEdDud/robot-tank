@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify, abort  # imports Flask and tools for HTML rendering and handling requests
 from flask_sqlalchemy import SQLAlchemy  # imports SQLAlchemy for database integration
 from flask_restful import Api  # imports Flask-RESTful tools
-from motor_driver import forward, reverse, turn_left, turn_right, motor_stop  # imports motor control functions from motor_driver module
+from motor_driver import rpi_vehicle  # imports motor control functions from motor_driver module
 import requests, subprocess, os  # imports requests to make HTTP calls and subprocess to run shell commands
 
 app = Flask(__name__)  # creates the Flask application instance
@@ -27,15 +27,15 @@ def move():  # function to handle movement commands
 
     try:
         if direction == "up":
-            forward()
+            rpi_vehicle.forward()
         elif direction == "down":
-            reverse()
+            rpi_vehicle.reverse()
         elif direction == "left":
-            turn_left()
+            print("Turning left")
         elif direction == "right":
-            turn_right()
+            print("Turning right")
         else:
-            motor_stop()
+            rpi_vehicle.stop()
 
         return {"status": "executed", "direction": direction}
     except Exception as e:
