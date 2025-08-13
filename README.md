@@ -13,3 +13,5 @@ Notes for future writing:
 - used CAD for the first time
 - learning about lots of different circuitry 
 - using motors, speakers, microphones for first time
+
+https://learn.sparkfun.com/tutorials/tb6612fng-hookup-guide/all
