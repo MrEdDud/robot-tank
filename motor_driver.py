@@ -51,26 +51,15 @@ class Vehicle:
 rpi_vehicle = Vehicle()
 
 def main(window):
-    next_key = None
-
     while True:
-        curses.halfdelay(1)
+        curses.halfdelay(5)  # wait 0.5s per read
         key = window.getch()
-        if key != -1:
-            print(f"Key pressed: {key}")
-        if next_key is None:
-            key = window.getch()
-        else:
-            key = next_key
-            next_key = None
 
-        if key != -1:
-            # KEY PRESSED
-            action = rpi_vehicle.control(key)
-            next_key = key
-            while next_key == key:
-                next_key = window.getch()
-            # KEY RELEASED
+        if key == 259:  # UP
+            rpi_vehicle.forward()
+        elif key == 258:  # DOWN
+            rpi_vehicle.backward()
+        else:
             rpi_vehicle.stop()
 
 curses.wrapper(main)
