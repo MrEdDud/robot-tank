@@ -1,30 +1,37 @@
-from gpiozero import Motor, DigitalOutputDevice
+from gpiozero import DigitalOutputDevice, PWMOutputDevice
 import time
 
+# STBY — enable the driver
 STBY = DigitalOutputDevice(22)
 STBY.on()
 
-motor_a = Motor(forward=16, backward=18)
-motor_b = Motor(forward=15, backward=13)
+# Motor A pins
+A1 = DigitalOutputDevice(16)
+A2 = DigitalOutputDevice(18)
+PWMA = PWMOutputDevice(12)
+PWMA.value = 1.0  # full speed
 
-# Test Motor A
-print("Motor A forward")
-motor_a.forward()
-time.sleep(2)
-motor_a.stop()
+# Motor B pins
+B1 = DigitalOutputDevice(15)
+B2 = DigitalOutputDevice(13)
+PWMB = PWMOutputDevice(11)
+PWMB.value = 1.0  # full speed
 
-print("Motor A backward")
-motor_a.backward()
-time.sleep(2)
-motor_a.stop()
+def test_motor(forward_pin, backward_pin, motor_name):
+    print(f"Testing {motor_name} forward")
+    forward_pin.on()
+    backward_pin.off()
+    time.sleep(2)
 
-# Test Motor B
-print("Motor B forward")
-motor_b.forward()
-time.sleep(2)
-motor_b.stop()
+    print(f"Testing {motor_name} backward")
+    forward_pin.off()
+    backward_pin.on()
+    time.sleep(2)
 
-print("Motor B backward")
-motor_b.backward()
-time.sleep(2)
-motor_b.stop()
+    forward_pin.off()
+    backward_pin.off()
+    print(f"{motor_name} test complete\n")
+
+while True:
+    test_motor(A1, A2, "Motor A")
+    test_motor(B1, B2, "Motor B")
