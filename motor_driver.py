@@ -40,7 +40,7 @@ class Vehicle:
     def map_key_to_command(self, key):
         return {
             curses.KEY_UP: self.forward,
-            curses.KEY_DOWN: self.backward
+            curses.KEY_DOWN: self.backward,
         }.get(key)
 
     def control(self, key):
@@ -55,6 +55,9 @@ def main(window):
 
     while True:
         curses.halfdelay(1)
+        key = window.getch()
+        if key != -1:
+            print(f"Key pressed: {key}")
         if next_key is None:
             key = window.getch()
         else:
