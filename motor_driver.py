@@ -1,3 +1,4 @@
+rpi_vehicle = None
 """from gpiozero import DigitalOutputDevice, PWMOutputDevice
 import time
 
