@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify, abort  # imports Flask and tools for HTML rendering and handling requests
 from flask_sqlalchemy import SQLAlchemy  # imports SQLAlchemy for database integration
 from flask_restful import Api  # imports Flask-RESTful tools
-from motor_driver import rpi_vehicle  # imports motor control functions from motor_driver module
+#from motor_driver import rpi_vehicle  # imports motor control functions from motor_driver module
 import requests, subprocess, os  # imports requests to make HTTP calls and subprocess to run shell commands
 
 app = Flask(__name__)  # creates the Flask application instance
@@ -18,7 +18,7 @@ def limit_remote_addr():
     if request.remote_addr != ALLOWED_IP:
         abort(403)
 
-@app.route("/api/move", methods=["POST"])  # defines a POST endpoint at /api/move
+"""@app.route("/api/move", methods=["POST"])  # defines a POST endpoint at /api/move
 def move():  # function to handle movement commands
     data = request.get_json()  # gets JSON data from the POST request
     direction = data.get("direction")  # extracts the "direction" value from the JSON
@@ -39,7 +39,7 @@ def move():  # function to handle movement commands
 
         return {"status": "executed", "direction": direction}
     except Exception as e:
-        return {"error": str(e)}, 500
+        return {"error": str(e)}, 500"""
 
 @app.route("/api/play", methods=["POST"])  # defines another POST endpoint at the same path (this will override the above one)
 def play_audio():  # function to play audio locally using mpv
