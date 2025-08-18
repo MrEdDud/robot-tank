@@ -9,13 +9,13 @@ STBY.on()
 A1 = DigitalOutputDevice(16)
 A2 = DigitalOutputDevice(18)
 PWMA = PWMOutputDevice(12)
-PWMA.value = 1.0  # full speed
+PWMA.value = 0.1  # full speed
 
 # Motor B pins
 B1 = DigitalOutputDevice(15)
 B2 = DigitalOutputDevice(13)
 PWMB = PWMOutputDevice(11)
-PWMB.value = 1.0  # full speed
+PWMB.value = 0.1  # full speed
 
 def test_motor(forward_pin, backward_pin, motor_name):
     print(f"Testing {motor_name} forward")
