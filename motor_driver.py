@@ -1,5 +1,4 @@
-rpi_vehicle = None
-"""from gpiozero import DigitalOutputDevice, PWMOutputDevice
+from gpiozero import DigitalOutputDevice, PWMOutputDevice
 import time
 
 # STBY — enable the driver
@@ -35,4 +34,4 @@ def test_motor(forward_pin, backward_pin, motor_name):
 
 while True:
     test_motor(A1, A2, "Motor A")
-    test_motor(B1, B2, "Motor B")"""
+    test_motor(B1, B2, "Motor B")
