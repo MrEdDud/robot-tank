@@ -1,5 +1,5 @@
-from gpiozero import DigitalOutputDevice, PWMOutputDevice, Device
-Device.close_all()
+from gpiozero import DigitalOutputDevice, PWMOutputDevice
+import atexit
 
 # BCM pins that correspond to your physical header wiring
 A1  = DigitalOutputDevice(23, initial_value=False)  # phys 16
@@ -44,3 +44,14 @@ def stop():
     B1.off(); B2.off()
     PWMA.value = 0.0
     PWMB.value = 0.0
+
+def cleanup():
+    """Cleanup GPIO settings."""
+    A1.close()
+    A2.close()
+    PWMA.close()
+    B1.close()
+    B2.close()
+    PWMB.close()
+
+atexit.register(cleanup)  # Ensure motors stop on exit
