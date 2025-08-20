@@ -48,11 +48,6 @@
             fetch(apiUrl + '/stop', { method: 'POST' });
         }
 
-        document.getElementById('up').onclick = () => sendMove('up');  // binds the "up" button to send the "up" command
-        document.getElementById('down').onclick = () => sendMove('down');  // binds the "down" button
-        document.getElementById('left').onclick = () => sendMove('left');  // binds the "left" button
-        document.getElementById('right').onclick = () => sendMove('right');  // binds the "right" button
-
         document.getElementById('playSound').onclick = () => {  // binds the "playSound" button
             const url = document.getElementById('soundUrl').value;  // gets the value from the sound input field
             if(url) sendSound(url);  // if URL exists, send it to the backend
@@ -60,17 +55,37 @@
 
         document.getElementById('stopSound').onclick = () => stopSound();  // binds the "stopSound" button to stop the audio
 
-        window.addEventListener('keydown', (e) => {  // listens for keydown events on the page
-            switch(e.key.toLowerCase()) {  // converts pressed key to lowercase and handles it
-                case 'arrowup':
-                case 'w': sendMove('up'); break;  // handles up arrow and 'w'
-                case 'arrowdown':
-                case 's': sendMove('down'); break;  // handles down arrow and 's'
-                case 'arrowleft':
-                case 'a': sendMove('left'); break;  // handles left arrow and 'a'
-                case 'arrowright':
-                case 'd': sendMove('right'); break;  // handles right arrow and 'd'
-            }
+        document.getElementById('up').addEventListener('mousedown', () => sendMove('stop'));
+        document.getElementById('up').addEventListener('mouseup', () => sendMove('stop'));
+
+        document.getElementById('down').addEventListener('mousedown', () => sendMove('down'));
+        document.getElementById('down').addEventListener('mouseup', () => sendMove('stop'));
+
+        document.getElementById('left').addEventListener('mousedown', () => sendMove('left'));
+        document.getElementById('left').addEventListener('mouseup', () => sendMove('stop'));
+
+        document.getElementById('right').addEventListener('mousedown', () => sendMove('right'));
+        document.getElementById('right').addEventListener('mouseup', () => sendMove('stop'));
+
+        const keys = {
+            'arrowup': 'up',
+            'w': 'up',
+            'arrowdown': 'down',
+            's': 'down',
+            'arrowleft': 'left',
+            'a': 'left',
+            'arrowright': 'right',
+            'd': 'right'
+        };
+
+        window.addEventListener('keydown', e => {
+            const dir = keys[e.key.toLowerCase()];
+            if (dir) sendMove(dir);
+        });
+
+        window.addEventListener('keyup', e => {
+            const dir = keys[e.key.toLowerCase()];
+            if (dir) sendMove('stop');
         });
     </script>
 </body>
