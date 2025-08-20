@@ -10,7 +10,6 @@ db = SQLAlchemy(app)  # initializes the database object with the app
 api = Api(app)  # initializes the RESTful API with the app
 player_process = None  # initializes a variable to manage the audio player process
 
-PI_IP = "http://192.168.0.108:5001"  # stores the Raspberry Pi's local IP address and port
 ALLOWED_IP = os.getenv("ALLOWED_IP")
 
 @app.before_request
@@ -73,4 +72,4 @@ def home():  # function to render the home page
     return render_template("index.html")  # renders the index.html template
 
 if __name__ == "__main__":  # checks if the script is being run directly
-    app.run(host = "0.0.0.0", debug=True, use_reloader=False)  # starts the Flask development server with debug mode enabled
+    app.run(host = "192.168.0.108", port=5000, debug=True, use_reloader=False)  # starts the Flask development server with debug mode enabled
