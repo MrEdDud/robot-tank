@@ -28,16 +28,12 @@ def move():  # function to handle movement commands
     try:
         if direction == "up":
             motor_driver.left()
-            print("Turning left")
         elif direction == "down":
             motor_driver.right()
-            print("Turning right")
         elif direction == "left":
-            motor_driver.forward()
-            print("Moving forward")
-        elif direction == "right":
             motor_driver.reverse()
-            print("Moving backward")
+        elif direction == "right":
+            motor_driver.forward()
         else:
             motor_driver.stop()
 
