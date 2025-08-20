@@ -77,4 +77,4 @@ def home():  # function to render the home page
     return render_template("index.html")  # renders the index.html template
 
 if __name__ == "__main__":  # checks if the script is being run directly
-    app.run(host = "0.0.0.0", debug=True)  # starts the Flask development server with debug mode enabled
+    app.run(host = "0.0.0.0", debug=True, use_reloader=False)  # starts the Flask development server with debug mode enabled
