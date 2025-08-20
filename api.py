@@ -27,13 +27,13 @@ def move():  # function to handle movement commands
 
     try:
         if direction == "up":
-            motor_driver.left()
-        elif direction == "down":
             motor_driver.right()
+        elif direction == "down":
+            motor_driver.left()
         elif direction == "left":
-            motor_driver.reverse()
-        elif direction == "right":
             motor_driver.forward()
+        elif direction == "right":
+            motor_driver.reverse()
         else:
             motor_driver.stop()
 
