@@ -10,13 +10,6 @@ db = SQLAlchemy(app)  # initializes the database object with the app
 api = Api(app)  # initializes the RESTful API with the app
 player_process = None  # initializes a variable to manage the audio player process
 
-ALLOWED_IP = os.getenv("ALLOWED_IP")
-
-@app.before_request
-def limit_remote_addr():
-    if request.remote_addr != ALLOWED_IP:
-        abort(403)
-
 @app.route("/api/move", methods=["POST"])  # defines a POST endpoint at /api/move
 def move():  # function to handle movement commands
     data = request.get_json()  # gets JSON data from the POST request
