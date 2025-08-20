@@ -31,9 +31,9 @@ def move():  # function to handle movement commands
         elif direction == "down":
             motor_driver.right()
         elif direction == "left":
-            motor_driver.reverse()
-        elif direction == "right":
             motor_driver.forward()
+        elif direction == "right":
+            motor_driver.reverse()
         else:
             motor_driver.stop()
 
