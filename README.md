@@ -25,3 +25,6 @@ Main stuff I used
 Connecting the motor
 https://www.youtube.com/watch?v=3LBiyBTnt7g&t=1598s
 https://learn.sparkfun.com/tutorials/tb6612fng-hookup-guide/all
+
+Install + Fixing the audio
+https://learn.adafruit.com/adafruit-speaker-bonnet-for-raspberry-pi/raspberry-pi-usage

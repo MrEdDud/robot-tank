@@ -46,7 +46,7 @@ def play_audio():  # function to play audio locally using mpv
         if player_process and player_process.poll() is None:  # checks if the player process is already running
             player_process.terminate()  # terminates the existing player process if it is running
 
-        player_process = subprocess.Popen(['mpv', '--no-video', '--ytdl-format=bestaudio', url])  # launches mpv in background to play audio without video
+        player_process = subprocess.Popen(['mpv', '--no-video', '--ytdl-format=best', url])  # launches mpv in background to play audio without video
         return jsonify({"message": "Playing audio at volume {volume}"}), 200  # returns success message
     except Exception as e:  # handles exceptions
         return jsonify({"error": str(e)}), 500  # returns error message with 500 status code
