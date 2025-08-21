@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify, abort  # imports Fla
 from flask_sqlalchemy import SQLAlchemy  # imports SQLAlchemy for database integration
 from flask_restful import Api  # imports Flask-RESTful tools
 import motor_driver  # imports motor control functions from motor_driver module
-import requests, subprocess, os  # imports requests to make HTTP calls and subprocess to run shell commands
+import subprocess  # imports requests to make HTTP calls and subprocess to run shell commands
 
 app = Flask(__name__)  # creates the Flask application instance
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"  # sets the database URI to use a local SQLite file
@@ -46,7 +46,7 @@ def play_audio():  # function to play audio locally using mpv
         if player_process and player_process.poll() is None:  # checks if the player process is already running
             player_process.terminate()  # terminates the existing player process if it is running
 
-        player_process = subprocess.Popen(['mpv', '--no-video', '--ytdl-format=best', '--ytdl-external-downloader=yt-dlp', url])  # launches mpv in background to play audio without video
+        player_process = subprocess.Popen(['mpv', '--no-video', '--ytdl-format=best', url])  # launches mpv in background to play audio without video
         return jsonify({"message": "Playing audio at volume {volume}"}), 200  # returns success message
     except Exception as e:  # handles exceptions
         return jsonify({"error": str(e)}), 500  # returns error message with 500 status code
