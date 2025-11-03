@@ -3,4 +3,4 @@ __pycache__/
 .venv/
 database.db
 .env
-progress_pictures
+README.md
