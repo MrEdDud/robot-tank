@@ -1,4 +1,4 @@
-const apiUrl = 'http://192.168.0.108:5000/api';  // sets the base URL for API requests
+const apiUrl = "/api";  // sets the base URL for API requests
 
 function sendMove(direction) {  // defines a function to send movement commands
     fetch(apiUrl + '/move', {  // sends a POST request to /move url
@@ -40,14 +40,10 @@ document.getElementById('right').addEventListener('mousedown', () => sendMove('r
 document.getElementById('right').addEventListener('mouseup', () => sendMove('stop'));
 
 const keys = {
-    'arrowup': 'up',
-    'w': 'up',
-    'arrowdown': 'down',
-    's': 'down',
-    'arrowleft': 'left',
-    'a': 'left',
-    'arrowright': 'right',
-    'd': 'right'
+    'arrowup': 'up', 'w': 'up',
+    'arrowdown': 'down', 's': 'down',
+    'arrowleft': 'left', 'a': 'left',
+    'arrowright': 'right', 'd': 'right'
 };
 
 window.addEventListener('keydown', e => {

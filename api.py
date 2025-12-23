@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, jsonify, abort  # imports Flask and tools for HTML rendering and handling requests
 from flask_sqlalchemy import SQLAlchemy  # imports SQLAlchemy for database integration
 from flask_restful import Api  # imports Flask-RESTful tools
+from dotenv import load_dotenv  # imports dotenv to load environment variables from a .env file
+import os  # imports os module to interact with the operating system
 import motor_driver  # imports motor control functions from motor_driver module
 import subprocess  # imports requests to make HTTP calls and subprocess to run shell commands
 
+load_dotenv()  # loads environment variables from a .env file
 app = Flask(__name__)  # creates the Flask application instance
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"  # sets the database URI to use a local SQLite file
 db = SQLAlchemy(app)  # initializes the database object with the app
@@ -65,4 +68,4 @@ def home():  # function to render the home page
     return render_template("index.html")  # renders the index.html template
 
 if __name__ == "__main__":  # checks if the script is being run directly
-    app.run(host = "192.168.0.108", port=5000, debug=True, use_reloader=False)  # starts the Flask development server with debug mode enabled
+    app.run(host = os.getenv("PI_IP"), port=5000, debug=True, use_reloader=False)  # starts the Flask development server with debug mode enabled
