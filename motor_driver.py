@@ -7,11 +7,11 @@ Device.pin_factory = RPiGPIOFactory()
 # BCM pins that correspond to your physical header wiring
 A1  = DigitalOutputDevice(23, initial_value=False)  # phys 16
 A2  = DigitalOutputDevice(24, initial_value=False)  # phys 18
-PWMA = PWMOutputDevice(18, initial_value=0.0)       # phys 12
+PWMA = PWMOutputDevice(12, initial_value=0.0)       # phys 32
 
 B1  = DigitalOutputDevice(22, initial_value=False)  # phys 15
 B2  = DigitalOutputDevice(27, initial_value=False)  # phys 13
-PWMB = PWMOutputDevice(17, initial_value=0.0)       # phys 11
+PWMB = PWMOutputDevice(13, initial_value=0.0)       # phys 33
 
 try:
     def forward(speed=1):
