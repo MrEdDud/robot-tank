@@ -8,19 +8,24 @@
     <link href="/static/style.css" rel="stylesheet">
 </head>
 <body>
-    <h1 style="font-size:64px; text-align: center;">Tank Control Panel</h1>
+    <h1 class="title">Tank Control Panel</h1>
+    <h1>Tank movement:</h1>
     <div>
-        <h1 style="font-size: 48px;">Tank movement:</h1>
         <button id="up">↑</button>
         <button id="down">↓</button>
         <button id="left">←</button>
         <button id="right">→</button>
     </div>
+    <h1>Output sound:</h1>
     <div>
-        <h1 style="font-size: 48px;">Output sound:</h1>
-        <input id="soundUrl" type="text" placeholder="Enter URL" size="50" style="font-size: 24px">
-        <button style="width:10%" id="playSound">Play Sound</button>
-        <button style="width:10%" id="stopSound">Stop</button>
+        <input id="soundUrl" type="text" placeholder="Enter URL" size="50">
+        <button id="playSound">Play</button>
+        <button id="stopSound">Stop</button>
+    </div>
+    <h1>Talk to AI:</h1>
+    <div>
+        <textarea placeholder="Talk to AI..." id="aiChat" rows="10" cols="80"></textarea>
+        <button id="sendMsg" style="margin-top: 1vh;">Send</button>
     </div>
     <script src="/static/script.js"></script>
 </body>

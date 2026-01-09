@@ -1,61 +1,57 @@
 const apiUrl = "/api";  // sets the base URL for API requests
 
-function sendMove(direction) {  // defines a function to send movement commands
-    fetch(apiUrl + '/move', {  // sends a POST request to /move url
-        method: 'POST',  // sets HTTP method to POST
-        headers: {'Content-Type': 'application/json'},  // tells the server the request body is JSON
-        body: JSON.stringify({direction})  // sends the direction as JSON in the body
+// Function to send POST request with movement direction
+function sendMove(direction) {  
+    fetch(apiUrl + '/move', { 
+        method: 'POST',  
+        headers: {'Content-Type': 'application/json'},  
+        body: JSON.stringify({direction})  
     });
 }
 
-function sendSound(url) {  // defines a function to send a sound URL
-    fetch(apiUrl + '/play', {  // sends a POST request to /play
-        method: 'POST',  // sets HTTP method to POST
-        headers: {'Content-Type': 'application/json'},  // tells the server the request body is JSON
-        body: JSON.stringify({url})  // sends the URL as JSON in the body
+// Function to send POST request with sound URL to be played
+function sendSound(url) {  
+    fetch(apiUrl + '/play', {  
+        method: 'POST',  
+        headers: {'Content-Type': 'application/json'},  
+        body: JSON.stringify({url})  
     });
 }
 
+// Function to send POST request with text to be spoken
+function sendText(text) {  
+    fetch(apiUrl + '/speak', { 
+        method: 'POST',  
+        headers: {'Content-Type': 'application/json'},  
+        body: JSON.stringify({text})  
+    });
+}
+
+// Function to send POST request to stop any playing sound
 function stopSound() {
     fetch(apiUrl + '/stop', { method: 'POST' });
 }
 
-document.getElementById('playSound').onclick = () => {  // binds the "playSound" button
-    const url = document.getElementById('soundUrl').value;  // gets the value from the sound input field
-    if(url) sendSound(url);  // if URL exists, send it to the backend
+// When the play button is pressed, send the link to be played
+document.getElementById('playSound').onclick = () => { 
+    const url = document.getElementById('soundUrl').value;  
+    if(url) {
+        sendSound(url)
+    };
 };
 
-document.getElementById('stopSound').onclick = () => stopSound();  // binds the "stopSound" button to stop the audio
+// When the stop button is pressed, stop the sound
+document.getElementById('stopSound').onclick = () => stopSound();
 
-document.getElementById('up').addEventListener('mousedown', () => sendMove('stop'));
-document.getElementById('up').addEventListener('mouseup', () => sendMove('stop'));
-
-document.getElementById('down').addEventListener('mousedown', () => sendMove('down'));
-document.getElementById('down').addEventListener('mouseup', () => sendMove('stop'));
-
-document.getElementById('left').addEventListener('mousedown', () => sendMove('left'));
-document.getElementById('left').addEventListener('mouseup', () => sendMove('stop'));
-
-document.getElementById('right').addEventListener('mousedown', () => sendMove('right'));
-document.getElementById('right').addEventListener('mouseup', () => sendMove('stop'));
-
-const keys = {
-    'arrowup': 'up', 'w': 'up',
-    'arrowdown': 'down', 's': 'down',
-    'arrowleft': 'left', 'a': 'left',
-    'arrowright': 'right', 'd': 'right'
+// When the send message button is pressed, send the text to AI
+document.getElementById('sendMsg').onclick = () => {
+    const text = document.getElementById('aiChat').value;
+    if(text) {
+        sendText(text);
+    }
 };
 
-window.addEventListener('keydown', e => {
-    const dir = keys[e.key.toLowerCase()];
-    if (dir) sendMove(dir);
-});
-
-window.addEventListener('keyup', e => {
-    const dir = keys[e.key.toLowerCase()];
-    if (dir) sendMove('stop');
-});
-
+// Add touch support for movement buttons
 const buttons = [
     {id: 'up', direction: 'up'},
     {id: 'down', direction: 'down'},
@@ -63,10 +59,29 @@ const buttons = [
     {id: 'right', direction: 'right'}
 ];
 
+// Attach touch and mouse event listeners to each button
 buttons.forEach(btnInfo => {
     const btn = document.getElementById(btnInfo.id);
-    // Start moving on press (mouse or touch)
     btn.onmousedown = btn.ontouchstart = () => sendMove(btnInfo.direction);
-    // Stop moving on release (mouse or touch)
     btn.onmouseup = btn.ontouchend = () => sendMove('stop');
+});
+
+// Map keys to directions for keyboard control
+const keys = {
+    'arrowup': 'up',
+    'arrowdown': 'down',
+    'arrowleft': 'left',
+    'arrowright': 'right'
+};
+
+// Handle keyboard events for movement
+window.addEventListener('keydown', e => {
+    const dir = keys[e.key.toLowerCase()];
+    if (dir) sendMove(dir);
+});
+
+// Stop movement on key release
+window.addEventListener('keyup', e => {
+    const dir = keys[e.key.toLowerCase()];
+    if (dir) sendMove('stop');
 });

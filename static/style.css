@@ -1,16 +1,59 @@
 html {
-    font-family: 'Inter', sans-serif; 
+    font-family: Consolas; 
     background-color: #121212; 
     color: #E0E0E0; 
-    padding:20px;
+    padding: 2vw;
+}
+
+h1 {
+    font-size: 2.4vh;
+}
+
+button, input {
+    height: 5vh;
+    font-size: 2vh;
+    box-sizing: border-box;
+    padding: 0;
+    border: 1px solid #E0E0E0;
+    vertical-align: middle;
 }
 
 button { 
-    width: 60px; 
-    height: 60px; 
-    font-size: 24px; 
-    margin: 5px; 
+    width: 15vw; 
     background-color: transparent; 
     color: #E0E0E0; 
     font-weight: bold;
 } 
+
+button:hover {
+    cursor: pointer;
+}
+
+input {
+    width: 60vw;
+    font-family: inherit;
+}
+
+textarea {
+    width: 91vw; 
+    font-size: 2vh;
+}
+
+.title {
+    font-size:6vh; 
+    text-align: center;
+}
+
+@media (max-width: 750px) {
+    input {
+        width: 90vw;
+    }
+
+    button {
+        margin-top: 1vh;
+    }
+
+    textarea {
+        width: 90vw;
+    }
+}
