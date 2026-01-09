@@ -16,6 +16,7 @@ button, input {
     padding: 0;
     border: 1px solid #E0E0E0;
     vertical-align: middle;
+    transition: 0.1s;
 }
 
 button { 
@@ -25,9 +26,8 @@ button {
     font-weight: bold;
 } 
 
-button:hover {
-    cursor: pointer;
-}
+button:hover { cursor: pointer; }
+button:active { border-color: #333333; }
 
 input {
     width: 60vw;
