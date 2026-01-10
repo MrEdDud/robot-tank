@@ -1,9 +1,11 @@
+const host = window.location.hostname;
+const motorUrl = `http://${host}:5001`;
+
 const apiUrl = "/api";  // sets the base URL for API requests
-const motorUrl = ":5001/api";  // sets the base URL for motor control requests
 
 // Function to send POST request with movement direction
 function sendMove(direction) {  
-    fetch(motorUrl + 'move', { 
+    fetch(`${motorUrl}/move`, { 
         method: 'POST',  
         headers: {'Content-Type': 'application/json'},  
         body: JSON.stringify({direction})  
