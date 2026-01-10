@@ -8,12 +8,14 @@ colorzero==2.0
 Flask==3.1.1
 Flask-RESTful==0.3.10
 Flask-SQLAlchemy==3.1.1
+Flask-Cors==3.0.12
 gpiozero==2.0.1
 greenlet==3.2.3
 idna==3.10
 itsdangerous==2.2.0
 Jinja2==3.1.6
 MarkupSafe==3.0.2
+openai==1.7.2
 pytz==2025.2
 requests==2.32.4
 setuptools==80.9.0
