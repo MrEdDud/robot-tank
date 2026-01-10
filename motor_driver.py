@@ -15,35 +15,30 @@ PWMB = PWMOutputDevice(13, initial_value=0.0)       # phys 33
 
 try:
     def forward(speed=1):
-        """Move the vehicle forward at a specified speed."""
         A1.on(); A2.off()
         B1.on(); B2.off()
         PWMA.value = speed
         PWMB.value = speed
 
     def reverse(speed=1):
-        """Move the vehicle backward at a specified speed."""
         A1.off(); A2.on()
         B1.off(); B2.on()
         PWMA.value = speed
         PWMB.value = speed
 
     def left(speed=1):
-        """Turn the vehicle left at a specified speed."""
         A1.off(); A2.on()
         B1.on(); B2.off()
         PWMA.value = speed
         PWMB.value = speed
 
     def right(speed=1):
-        """Turn the vehicle right at a specified speed."""
         A1.on(); A2.off()
         B1.off(); B2.on()
         PWMA.value = speed
         PWMB.value = speed
 
     def stop():
-        """Stop the vehicle."""
         A1.off(); A2.off()
         B1.off(); B2.off()
         PWMA.value = 0.0
@@ -52,7 +47,6 @@ except:
     print("Error initializing motor driver. Ensure GPIO pins are correctly set up.")
 
 def cleanup():
-    """Cleanup GPIO settings."""
     A1.close()
     A2.close()
     PWMA.close()

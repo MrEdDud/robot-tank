@@ -4,7 +4,6 @@ from flask_restful import Api  # imports Flask-RESTful tools
 from dotenv import load_dotenv  # imports dotenv to load environment variables from a .env file
 from openai import OpenAI  # imports OpenAI for API interactions
 import os  # imports os module to interact with the operating system
-import motor_driver  # imports motor control functions from motor_driver module
 import subprocess  # imports requests to make HTTP calls and subprocess to run shell commands
 
 load_dotenv()  # loads environment variables from a .env file
@@ -14,29 +13,6 @@ db = SQLAlchemy(app)  # initializes the database object with the app
 api = Api(app)  # initializes the RESTful API with the app
 player_process = None  # initializes a variable to manage the audio player process
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))  # initializes the OpenAI client with the API key from environment variables
-
-@app.route("/api/move", methods=["POST"])  # defines a POST endpoint at /api/move
-def move():  # function to handle movement commands
-    data = request.get_json()  # gets JSON data from the POST request
-    direction = data.get("direction")  # extracts the "direction" value from the JSON
-    if not direction:
-        return {"error": "No direction provided"}, 400
-
-    try:
-        if direction == "up":
-            motor_driver.right()
-        elif direction == "down":
-            motor_driver.left()
-        elif direction == "left":
-            motor_driver.forward()
-        elif direction == "right":
-            motor_driver.reverse()
-        else:
-            motor_driver.stop()
-
-        return {"status": "executed", "direction": direction}
-    except Exception as e:
-        return {"error": str(e)}, 500
 
 @app.route("/api/play", methods=["POST"])  # defines another POST endpoint at the same path (this will override the above one)
 def play_audio():  # function to play audio locally using mpv
