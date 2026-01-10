@@ -2,7 +2,7 @@ const apiUrl = "/api";  // sets the base URL for API requests
 
 // Function to send POST request with movement direction
 function sendMove(direction) {  
-    fetch(apiUrl + '/move', { 
+    fetch(apiUrl + ':5001/move', { 
         method: 'POST',  
         headers: {'Content-Type': 'application/json'},  
         body: JSON.stringify({direction})  
