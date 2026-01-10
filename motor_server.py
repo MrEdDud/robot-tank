@@ -1,7 +1,9 @@
 from flask import Flask, request
+from flask_cors import CORS
 import motor_driver
 
 app = Flask(__name__)
+CORS(app, origins=["http://192.168.0.108:5000"])
 
 @app.route("/move", methods=["POST"])
 def move():
