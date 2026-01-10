@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, "motor_server_libs")
+
 from flask import Flask, request
 from flask_cors import CORS
 import motor_driver
