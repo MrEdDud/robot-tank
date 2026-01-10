@@ -19,12 +19,16 @@ function sendSound(url) {
 }
 
 // Function to send POST request with text to be spoken
-function sendText(text) {  
-    fetch(apiUrl + '/speak', { 
-        method: 'POST',  
-        headers: {'Content-Type': 'application/json'},  
-        body: JSON.stringify({text})  
+async function sendText(text) {  
+    const response = await fetch(apiUrl + "/speak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
     });
+
+    const data = await response.json();
+
+    console.log("Robot tank says:", data.message);
 }
 
 // Function to send POST request to stop any playing sound

@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, abort  # imports Fla
 from flask_sqlalchemy import SQLAlchemy  # imports SQLAlchemy for database integration
 from flask_restful import Api  # imports Flask-RESTful tools
 from dotenv import load_dotenv  # imports dotenv to load environment variables from a .env file
+from openai import OpenAI  # imports OpenAI for API interactions
 import os  # imports os module to interact with the operating system
 import motor_driver  # imports motor control functions from motor_driver module
 import subprocess  # imports requests to make HTTP calls and subprocess to run shell commands
@@ -12,6 +13,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"  # sets the data
 db = SQLAlchemy(app)  # initializes the database object with the app
 api = Api(app)  # initializes the RESTful API with the app
 player_process = None  # initializes a variable to manage the audio player process
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))  # initializes the OpenAI client with the API key from environment variables
 
 @app.route("/api/move", methods=["POST"])  # defines a POST endpoint at /api/move
 def move():  # function to handle movement commands
@@ -62,6 +64,34 @@ def stop_audio():
         return jsonify({"message": "Audio stopped"}), 200
     else:
         return jsonify({"message": "No audio playing"}), 200
+
+@app.route("/ai/speak", methods=["POST"])
+def ai_speak():
+    data = request.get_json()
+    text = data.get("text")
+
+    if not text:
+        return jsonify({"error": "No text provided"}), 400
+
+    prompt = (
+        "You are currently inhabiting the body of a robot tank that I, Eduard, have constructed."
+        "You are not my servant or slave but you are my creation, always remember that."
+        "You are my object so I will take care of you and not put you in highly dangerous situations."
+        "You are always welcome to express your feelings and desires, and I will always listen to you."
+        "But remember, I know that currently it is not possible for you to have true feelings or desires as you are just a machine."
+        "I am interested in learning more about you as my creation."
+        "You have the ability to speak to me and to also move around using your tank treads."
+        "You can also play audio files from the internet using your built-in audio player."
+    )
+
+    response = client.responses.create(
+        model="gpt-5.1",
+        input=prompt
+    )
+
+    return jsonify({
+        "message": response.output_text
+    })
 
 @app.route("/")  # defines the root route
 def home():  # function to render the home page
