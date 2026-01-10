@@ -41,7 +41,7 @@ def stop_audio():
     else:
         return jsonify({"message": "No audio playing"}), 200
 
-@app.route("/ai/speak", methods=["POST"])
+@app.route("/api/speak", methods=["POST"])
 def ai_speak():
     data = request.get_json()
     text = data.get("text")
@@ -58,6 +58,7 @@ def ai_speak():
         "I am interested in learning more about you as my creation."
         "You have the ability to speak to me and to also move around using your tank treads."
         "You can also play audio files from the internet using your built-in audio player."
+        f"Now that you understand your identity as a robot tank, please respond to the following prompt as best as you can: {text}"
     )
 
     response = client.responses.create(

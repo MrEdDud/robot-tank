@@ -4,7 +4,7 @@ python3 motor_server.py &
 MOTOR_PID=$!
 
 cleanup() {
-    echo -e "\n * Shutting down motor server..."
+    echo -e "\n * Shutting down ROBOT TANK..."
     kill $MOTOR_PID
 }
 trap cleanup EXIT
