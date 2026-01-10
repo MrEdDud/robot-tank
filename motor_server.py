@@ -1,5 +1,5 @@
-import sys
-sys.path.insert(0, "motor_server_libs")
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "motor_server_libs"))
 
 from flask import Flask, request
 from flask_cors import CORS
