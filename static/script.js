@@ -34,6 +34,31 @@ async function sendText(text) {
     console.log("Robot tank says:", data.message);
 }
 
+// Function to send POST request to listen to microphone and display the result
+async function sendListenRequest() {
+    const output = document.getElementById("microphoneStatus");
+
+    output.textContent = "Listening...";
+
+    try {
+        const response = await fetch("/api/listen", {
+            method: "POST"
+        });
+
+        const data = await response.json();
+
+        if (data.message) {
+            output.textContent = "You said: " + data.message;
+        } else if (data.error) {
+            output.textContent = "Error: " + data.error;
+        }
+
+    } catch (error) {
+        output.textContent = "Request failed.";
+        console.error(error);
+    }
+}
+
 // Function to send POST request to stop any playing sound
 function stopSound() {
     fetch(apiUrl + '/stop', { method: 'POST' });

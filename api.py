@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, abort  # imports Fla
 from flask_sqlalchemy import SQLAlchemy  # imports SQLAlchemy for database integration
 from flask_restful import Api  # imports Flask-RESTful tools
 from dotenv import load_dotenv  # imports dotenv to load environment variables from a .env file
+from mic_driver import listen_once
 from openai import OpenAI  # imports OpenAI for API interactions
 import os  # imports os module to interact with the operating system
 import subprocess  # imports requests to make HTTP calls and subprocess to run shell commands
@@ -68,6 +69,15 @@ def ai_speak():
     return jsonify({
         "message": response.output_text
     })
+
+@app.route("/api/listen", methods=["POST"]) 
+def listen_to_microphone():
+    text = listen_once()
+
+    if not text:
+        return jsonify({"error": "No speech detected"}), 400
+
+    return jsonify({"message": text}), 200
 
 @app.route("/")  # defines the root route
 def home():  # function to render the home page
