@@ -49,6 +49,7 @@ async function sendListenRequest() {
 
         if (data.message) {
             output.textContent = "You said: " + data.message;
+            await sendText(data.message);
         } else if (data.error) {
             output.textContent = "Error: " + data.error;
         }
