@@ -4,8 +4,6 @@ import sounddevice as sd
 import time
 from vosk import Model, KaldiRecognizer
 
-print(sd.query_devices())
-
 MODEL_PATH = "vosk-model-small-en-us-0.15"
 SAMPLERATE = 16000
 BLOCKSIZE = 8000
@@ -22,6 +20,8 @@ def audio_callback(indata, frames, time_info, status):
 
 
 def listen_once(timeout=5):
+    print(sd.query_devices())
+
     """
     Listen for up to `timeout` seconds,
     then return recognized speech.
