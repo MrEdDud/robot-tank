@@ -20,7 +20,7 @@ def audio_callback(indata, frames, time_info, status):
 
 
 def listen_once(timeout=5):
-    print(sd.query_devices())
+    DEVICE_INDEX = 2
 
     """
     Listen for up to `timeout` seconds,
