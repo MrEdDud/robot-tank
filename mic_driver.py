@@ -1,6 +1,7 @@
 import queue
 import json
 import sounddevice as sd
+import time
 from vosk import Model, KaldiRecognizer
 
 MODEL_PATH = "vosk-model-small-en-us-0.15"
@@ -8,23 +9,25 @@ SAMPLERATE = 16000
 BLOCKSIZE = 8000
 
 audio_queue = queue.Queue()
-
 model = Model(MODEL_PATH)
 
 
-def audio_callback(indata, frames, time, status):
+def audio_callback(indata, frames, time_info, status):
     if status:
         print(status)
 
     audio_queue.put(bytes(indata))
 
 
-def listen_once():
+def listen_once(timeout=5):
     """
-    Listens until speech is recognized once,
-    then returns the recognized text.
+    Listen for up to `timeout` seconds,
+    then return recognized speech.
     """
     recognizer = KaldiRecognizer(model, SAMPLERATE)
+
+    print("Listening...")
+    start_time = time.time()
 
     with sd.RawInputStream(
         samplerate=SAMPLERATE,
@@ -33,7 +36,7 @@ def listen_once():
         channels=1,
         callback=audio_callback
     ):
-        while True:
+        while time.time() - start_time < timeout:
             data = audio_queue.get()
 
             if recognizer.AcceptWaveform(data):
@@ -41,3 +44,8 @@ def listen_once():
 
                 if result.get("text"):
                     return result["text"]
+
+        # Timeout fallback
+        partial = json.loads(recognizer.FinalResult())
+
+        return partial.get("text", "")
