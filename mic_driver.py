@@ -4,6 +4,8 @@ import sounddevice as sd
 import time
 from vosk import Model, KaldiRecognizer
 
+print(sd.query_devices())
+
 MODEL_PATH = "vosk-model-small-en-us-0.15"
 SAMPLERATE = 16000
 BLOCKSIZE = 8000
@@ -34,7 +36,8 @@ def listen_once(timeout=5):
         blocksize=BLOCKSIZE,
         dtype="int16",
         channels=1,
-        callback=audio_callback
+        callback=audio_callback,
+        device=DEVICE_INDEX
     ):
         while time.time() - start_time < timeout:
             data = audio_queue.get()
